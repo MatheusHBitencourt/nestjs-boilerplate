@@ -1,19 +1,26 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        DATABASE_URL: ${DATABASE_URL}
     container_name: nestjs-boilerplate
     networks:
       - main
     environment:
       - DATABASE_URL=${DATABASE_URL}
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "3000:3000"
       - "9229:9229"
     # REMOVE IN PRODUCTION
     volumes:
       - .:/usr/src/app
-      
+      - /usr/src/app/node_modules
+
 networks:
   main:
-    external: true
+    driver: bridge
 
